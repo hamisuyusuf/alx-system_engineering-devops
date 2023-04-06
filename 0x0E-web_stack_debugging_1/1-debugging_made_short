@@ -2,11 +2,8 @@
 # debugging nginx (service (init) must say that nginx is not running)
 grep -r "listen\s\+0\.0\.0\.0:80" /etc/nginx/sites-enabled/
 sudo rm /etc/nginx/sites-enabled/example.com
-# server {
-#     listen 0.0.0.0:80;
-#     server_name example.com;
-#     # ... other configuration options ...
-# }
+
+listen 0.0.0.0:80;
 
 sudo nginx -t
 sudo service nginx restart
