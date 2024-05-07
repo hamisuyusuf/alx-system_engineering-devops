@@ -1,5 +1,4 @@
-!#/bin/usr/python3
-
+#!/usr/bin/python3
 """
 Queries the Reddit API and returns the number of total subscribers for a given
 subreddit.
@@ -13,7 +12,7 @@ def number_of_subscribers(subreddit):
     given subreddit.
     """
     url = 'http://www.reddit.com/r/{}/about.json'.format(subreddit)
-    headers = {'User-Agent': 'Python/1.0(ALX School 0x16 task 0)'}
+    headers = {'User-Agent': 'Python/1.0(Alx School 0x16 task 0)'}
     response = requests.get(url, headers=headers)
     if (not response.ok):
         return 0
