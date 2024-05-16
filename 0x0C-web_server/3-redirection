@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Script that configures a new Ubuntu machine to respect above requirements
-
-sudo apt-get update
-sudo apt-get install -y nginx
-
-echo "Hello World!" | sudo tee /var/www/html/index.html
-string_for_replacement="server_name _;\n\trewrite ^\/redirect_me https:\/\/www.blog.realhamisu.com permanent;"
-sudo sed -i "s/server_name _;/$string_for_replacement/" /etc/nginx/sites-enabled/default
-
-sudo service nginx restart
+# setting up a ngix web server
+sudo apt -y update
+sudo apt -y install nginx
+sudo ufw allow 'Nginx HTTP'
+sudo chown ubuntu /var/www/html/index.html
+echo "Hello World!" > /var/www/html/index.html
+# adding a new redirect page
+#changing the default nginx file to redirect to the disired link
+sudo sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://github.com/hamisuyusuf/alx-system_engineering-devops permanent;' /etc/nginx/sites-available/default
+sudo service nginx start
