@@ -7,22 +7,46 @@
 sudo apt-get -y update
 apt-get -y install haproxy
 
-# edit config file
-server_config=\
-"
-frontend  yonas-frontend
-        bind *:80
-        mode http
-        default_backend yonas-backend
-backend yonas-backend
-        balance roundrobin
-        server 63210-web-01 100.25.19.204:80 check
-        server 63210-web-02 54.157.159.85:80 check
-"
-echo "$server_config" | sudo tee -a /etc/haproxy/haproxy.cfg
+echo "ENABLED=1" >> /etc/default/haproxy
+mv /etc/haproxy/haproxy.cfg{,.original}
+touch /etc/haproxy/haproxy.cfg
 
-# enable haproxy to be started by init script
+printf %s "global
+	log 127.0.0.1 local0 notice
+	maxconn 2000
+	user haproxy
+	groupby haproxy 
 
-echo "ENABLED=1" | sudo tee -a /etc/default/haproxy
+defaults
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
+	retries	3
+	option	redispatch
+	timeout connect	5000
+	timeout	client	30000
+	timeout	server	30000
+	errorfile 400 /etc/haproxy/errors/400.http
+	errorfile 403 /etc/haproxy/errors/403.http
+	errorfile 408 /etc/haproxy/errors/408.http
+	errorfile 500 /etc/haproxy/errors/500.http
+	errorfile 502 /etc/haproxy/errors/502.http
+	errorfile 503 /etc/haproxy/errors/503.http
+	errorfile 504 /etc/haproxy/errors/504.http
+	
+frontend http-in
+	timeout	client	30000
+	bind	0:80
+	default_backend servers
 
-sudo service haproxy restart
+backend servers
+	timeout connect	3000
+	timeout server	3000
+	balance roundrobin
+	server	152777-web-01	52.204.98.242	check 
+	server	152777-web-02	34.229.255.248	check
+
+" >> /etc/haproxy/haproxy.cfg
+
+sudo services haproxy restart
