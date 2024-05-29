@@ -41,7 +41,7 @@ frontend clickviral-tech-frontend
 backend realhamasu-tech-backend
     balance roundrobin
     server 152777-web-01 52.204.98.242:80 check
-    server 152777-web-02 34.229.255.248:80 check
+    server 152777-web-02 54.165.180.209:80 check
 "
 
 # shellcheck disable=SC2154
